@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Text from '../components/system/Text.astro';
+import TextEditor from '../components/cms/TextEditor'
+import '@/styles/globals.css'
+import { Button } from '@/components/ui/button'
+import Example from './Example.astro';
+
+---
+
+<div class="p-8">
+	<Example />
+</div>
+<!-- <Layout title="Welcome to Astro.">	
+	<main class="min-h-screen">
+		<div class="w-full bg-slate-200 flex flex-col px-4 py-2 items-start shadow-black">
+			<Button className='flex-shrink-0'>Edit</Button>
+		</div>
+		<div class="flex-1 h-screen w-full bg-white flex flex-col items-center justify-center">
+			<Text type="h2">Welcome to Astro.</Text>
+			<div class="p-2" />
+			<TextEditor text="text" client:load />
+		</div>
+	</main>
+</Layout> -->

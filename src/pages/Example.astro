@@ -1,0 +1,121 @@
+---
+import Text from "@/components/system/Text.astro";
+
+const h1 = (...text: string[]) => `<h1 class="font-black text-4xl">${text.join(' ')}</h1>`;
+const h2 = (...text: string[]) => `<h2 class="font-black text-2xl">${text.join(' ')}</h2>`;
+const p = (...text: string[]) => `<p>${text.join(' ')}</p>`;
+const colors = {
+  primary: '#ff0000',
+  secondary: '#00ff00',
+  tertiary: '#0000ff',
+}
+const color = ( color: string, ...text: string[]) => `<span style="color: ${color}">${text.join(' ')}</span>`;
+
+const c = (...text: string[]) => ({
+  primary: color(colors.primary, ...text,),
+  secondary: color(colors.secondary, ...text,),
+  tertiary: color(colors.tertiary, ...text,),
+})
+
+const SOME_CONDITION = true
+
+// All that data should be in the Same File or if not should be importent in form of comments
+// to be parsed by the CMS, Like this:
+// @cms:import someData from '../someData.ts'
+const someData = {
+  id: 1,
+  image: 'https://picsum.photos/200/300',
+  content: ['Data', 'Inside an', 'Object']
+}
+
+const arrayData = [
+  {
+    id: 1,
+    image: 'https://picsum.photos/200/300',
+    content: ['Data', 'Inside an', 'Array #1']
+  },
+  {
+    id: 2,
+    image: 'https://picsum.photos/200/300',
+    content: ['Data', 'Inside an', 'Array #2']
+  },
+  {
+    id: 3,
+    image: 'https://picsum.photos/200/300',
+    content: ['Data', 'Inside an', 'Array #3']
+  },
+]
+---
+<!-- 
+  We should minimise parser work as much as possible,
+  Only thing parser should do is see where a Text is and Nothing else,
+
+  Only thing parser should now that where to make a change. that is all //
+
+  So basically editable.website
+  just stores has a object which is stored in localstorage and default content is provided by
+  just using || operator, and then it just replaces the content in big json object
+
+  It is simple, but not the best DX.
+  We will have to basically maintain the json overselves.
+
+  This is where our parser should focus on.
+
+  Even if ignore the loop for now, we will have to:
+  - Recognise all the text components.
+  - Assign it a unique id and bind the text to the store.
+  - We can just add the cms to the component and assign this the :
+
+  <ComponentA text_cms="This that" />
+
+  And inside ComponentA it will be.
+
+  ---
+  const { text_cms } = Astro.props
+  ---
+
+  <div>
+    <Text content={text_cms} />
+  </div>
+  
+  <ComponentA text_cms={"This that"} text_cms_data={config['123']} text_cms_id="123" />
+  And inside ComponentA it will be.
+
+  ---
+  const { text_cms, text_cms_data text_cms_id } = Astro.props
+  ---
+
+  <div>
+    <Text content={text_cms} cms={text_cms_data} id={text_cms_id} />
+  </div>
+  How will recognise all the text nodes and assign an id?
+ -->
+<Text
+  t={
+    h1(
+      'Hello',
+      c('World').primary,
+    )
+  }
+/>
+
+{SOME_CONDITION &&
+  <Text
+    t={
+      h1(
+        'Conditional',
+        c('Text').primary,
+      )
+    }
+  />
+}
+
+<Text
+ t={
+   h2(
+    someData.content[0],
+    c(someData.content[1]).tertiary,
+    someData.content[2],
+   )
+ }
+/>
