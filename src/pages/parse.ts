@@ -40,13 +40,33 @@ const processFileContent = (filePath: string) => {
   const textComponentRegex = /<Text\s+(?:[^>]*?\s+)?t=({[^}]*}|"[^"]*"|'[^']*')(?:\s+[^>]*?)?\s*(?:\/>|>(?:\s*<\/Text>)?)/g;
   let match;
   let data = {};
+  let offset = 0; // Offset to account for changes in string length due to replacements
+
 
   while ((match = textComponentRegex.exec(content)) !== null) {
       const fullMatch = match[0];
+      const startIndex = match.index + offset; // Adjust start index by current offset
       const id = generateUniqueId();
       data[id] = null;
 
+      
+      
+      let replacement = '';
+
+      if (fullMatch.endsWith('/>')) {
+        // For self-closing tags, insert the new props before '/>'
+        replacement = fullMatch.replace('/>', ` cms={data['${id}']} id="${id}" />`);
+    } else {
+        // For open tags, insert the new props before '>'
+        replacement = fullMatch.replace(/>/, ` cms={data['${id}']} id="${id}">`);
+    }
       console.log('Matched --> \n', fullMatch)
+      console.log('Change --> \n', replacement)
+
+      content = content.substring(0, startIndex) + replacement + content.substring(startIndex + fullMatch.length);
+      offset += replacement.length - fullMatch.length; // Update offset for next iteration
+
+      console.log('Written')
   }
 
   return { content, data };
