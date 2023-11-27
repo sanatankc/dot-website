@@ -52,7 +52,7 @@ const processFileContent = (filePath: string) => {
     while ((match = textComponentRegex.exec(content)) !== null) {
         const fullMatch = match[0];
         // Check if the matched string already has an id attribute
-        if (fullMatch.includes('id="') || fullMatch.includes('id={') || fullMatch.includes('id=\'')) {
+        if (fullMatch.includes('id="') || fullMatch.includes('id={') || fullMatch.includes('id=\'') || fullMatch.includes('use-comp')) {
             continue; // Skip this match
         }
         const startIndex = match.index;
@@ -85,12 +85,14 @@ const processFileContent = (filePath: string) => {
   
         const frontmatterMatch = content.match(frontmatterRegex)
         const frontmatter = frontmatterMatch[0]
+        const frontmatterLines = frontmatter.split('\n')
         
-        const frontmatterLines = [
+        const newFrontmatterLines = [
+          frontmatterLines[0],
           dataImportStatement,  
-          ...(frontmatter.split('\n'))
+          ...frontmatterLines.slice(1)
         ]
-        const newFrontmatter = frontmatterLines.join('\n')
+        const newFrontmatter = newFrontmatterLines.join('\n')
   
         content = content.replace(frontmatter, newFrontmatter)
   
