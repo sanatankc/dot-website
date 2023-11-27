@@ -35,7 +35,7 @@ const generateUniqueId = () => {
 
 const processFileContent = (filePath: string) => {
   console.log('Processing file --> ', filePath);
-  const content = fs.readFileSync(filePath, 'utf8');
+  let content = fs.readFileSync(filePath, 'utf8');
 
   const textComponentRegex = /<Text\s+(?:[^>]*?\s+)?t=({[^}]*}|"[^"]*"|'[^']*')(?:\s+[^>]*?)?\s*(?:\/>|>(?:\s*<\/Text>)?)/g;
   let match;
