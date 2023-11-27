@@ -4,6 +4,7 @@ import * as path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 
+
 let astroFiles = []
 
 function readAstroFiles(dir) {
@@ -21,6 +22,7 @@ function readAstroFiles(dir) {
           }
           // If the item is a directory, recurse into it
           readAstroFiles(fullPath);
+          
       } else if (path.extname(fullPath) === '.astro') {
           // If the item is a .astro file, process it
           processFileContent(fullPath);
@@ -35,11 +37,17 @@ const generateUniqueId = () => {
 
 const processFileContent = (filePath: string) => {
   console.log('Processing file --> ', filePath);
+
   let content = fs.readFileSync(filePath, 'utf8');
+  const rootDir = process.cwd()
+
+  const cmsDataFilePath = path.join(rootDir, 'src/data.json');
+
+  let cmsContent = JSON.parse(fs.readFileSync(cmsDataFilePath, 'utf8'));
+
 
   const textComponentRegex = /<Text\s+(?:[^>]*?\s+)?t=({[^}]*}|"[^"]*"|'[^']*')(?:\s+[^>]*?)?\s*(?:\/>|>(?:\s*<\/Text>)?)/g;
   let match;
-  let data = {};
   let offset = 0; // Offset to account for changes in string length due to replacements
 
 
@@ -47,7 +55,7 @@ const processFileContent = (filePath: string) => {
       const fullMatch = match[0];
       const startIndex = match.index + offset; // Adjust start index by current offset
       const id = generateUniqueId();
-      data[id] = null;
+      cmsContent[id] = null;
 
       
       
@@ -66,7 +74,10 @@ const processFileContent = (filePath: string) => {
       content = content.substring(0, startIndex) + replacement + content.substring(startIndex + fullMatch.length);
       offset += replacement.length - fullMatch.length; // Update offset for next iteration
 
-      console.log('Written')
+      
+      fs.writeFileSync(filePath, content);
+      fs.writeFileSync(cmsDataFilePath, JSON.stringify(cmsContent, null, 2));
+
   }
 
   return { content, data };
@@ -75,7 +86,10 @@ const processFileContent = (filePath: string) => {
 
 export const GET: APIRoute = async ({ request }) => {
   const rootDir = process.cwd()
-  readAstroFiles(rootDir)
+
+  const cmsDataFilePath = path.join(rootDir, 'src/data.json');
+
+  readAstroFiles(rootDir, cmsContent)
 
   return new Response(
     JSON.stringify({
