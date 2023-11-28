@@ -1,6 +1,14 @@
 ---
-const { t } = Astro.props
+import TextEditor from "../cms/TextEditor";
+const { t, id } = Astro.props
+
+const edit = true
+
 ---
 
+{!edit && 
 <div set:html={t}>
 </div>
+}
+
+{edit && <TextEditor id={id} content={t} client:load />}
