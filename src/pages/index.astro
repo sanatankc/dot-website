@@ -6,12 +6,15 @@ import TextEditor from '../components/cms/TextEditor'
 import '@/styles/globals.css'
 import { Button } from '@/components/ui/button'
 import Example from './Example.astro';
-
+import ToolBar from '../components/cms/ToolBar'
 ---
 
-<div class="p-8">
-	<Example />
-</div>
+<Layout title='Demo'>
+	<div class="p-8">
+		<!-- <ToolBar client:load /> -->
+		<Example />
+	</div>
+</Layout>
 <!-- <Layout title="Welcome to Astro.">	
 	<main class="min-h-screen">
 		<div class="w-full bg-slate-200 flex flex-col px-4 py-2 items-start shadow-black">

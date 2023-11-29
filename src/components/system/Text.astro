@@ -1,14 +1,20 @@
 ---
+import data from "@/cms/data.json"
 import TextEditor from "../cms/TextEditor";
 const { t, id } = Astro.props
 
-const edit = true
+const cms_enabled = import.meta.env.CMS_ENABLED === "true";
+
+const edit = cms_enabled && true
+
+
+const text = data[id] || t
 
 ---
 
 {!edit && 
-<div set:html={t}>
+<div set:html={text}>
 </div>
 }
 
-{edit && <TextEditor id={id} content={t} client:load />}
+{edit && <TextEditor id={id} content={text} client:only />}

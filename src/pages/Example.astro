@@ -1,4 +1,5 @@
 ---
+import data from "@/cms/data.json"
 import Text from "@/components/system/Text.astro";
 
 const h1 = (...text: string[]) => `<h1 class="font-black text-4xl">${text.join(' ')}</h1>`;
@@ -9,7 +10,7 @@ const colors = {
   secondary: '#00ff00',
   tertiary: '#0000ff',
 }
-const color = ( color: string, ...text: string[]) => `<span style="color: ${color}">${text.join(' ')}</span>`;
+const color = ( color: string, ...text: string[]) => `<span style="color: ${color}; background: cyan;">${text.join(' ')}</span>`;
 
 const c = (...text: string[]) => ({
   primary: color(colors.primary, ...text,),
@@ -97,7 +98,7 @@ const arrayData = [
       c('World').primary,
     )
   }
-/>
+ cms={data['idjgjj7ovxs']} id="idjgjj7ovxs" />
 
 {SOME_CONDITION &&
   <Text
@@ -107,7 +108,7 @@ const arrayData = [
         c('Text').primary,
       )
     }
-  />
+   cms={data['idgr8zk101n']} id="idgr8zk101n" />
 }
 
 <Text
@@ -118,10 +119,10 @@ const arrayData = [
     someData.content[2],
    )
  }
-/>
+ cms={data['idkyuegj15h']} id="idkyuegj15h" />
 
 <Text
  t={
    `<p>This is a paragraph with <span style="color: red">colors</span></p>`
  }
-/>
+ cms={data['idk6edomlbo']} id="idk6edomlbo" />

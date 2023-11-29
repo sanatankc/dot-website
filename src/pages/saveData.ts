@@ -13,10 +13,13 @@ export const GET: APIRoute = async ({ params }) => {
 
   fs.writeFileSync(path.join(rootDir, 'src/cms/data.json'), JSON.stringify(data))
 
-  return {
-    status: 200,
-    body: {
-      message: 'success'
+
+  return new Response(
+    JSON.stringify({ result: true }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json"
+      }
     }
-  }
+  );
 }
