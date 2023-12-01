@@ -1,6 +1,7 @@
 ---
 import data from "@/cms/data.json"
 import Text from "@/components/system/Text.astro";
+import SomeComponent from "@/components/SomeComponent.astro";
 
 const h1 = (...text: string[]) => `<h1 class="font-black text-4xl">${text.join(' ')}</h1>`;
 const h2 = (...text: string[]) => `<h2 class="font-black text-2xl">${text.join(' ')}</h2>`;
@@ -33,17 +34,17 @@ const arrayData = [
   {
     id: 1,
     image: 'https://picsum.photos/200/300',
-    content: ['Data', 'Inside an', 'Array #1']
+    content: 'Data Inside an Array #1',
   },
   {
     id: 2,
     image: 'https://picsum.photos/200/300',
-    content: ['Data', 'Inside an', 'Array #2']
+    content: 'Data Inside an Array #2'
   },
   {
     id: 3,
     image: 'https://picsum.photos/200/300',
-    content: ['Data', 'Inside an', 'Array #3']
+    content: 'Data Inside an Array #3'
   },
 ]
 ---
@@ -98,7 +99,8 @@ const arrayData = [
       c('World').primary,
     )
   }
- cms={data['idjgjj7ovxs']} id="idjgjj7ovxs" />
+  id="testForAFixedId"
+/>
 
 {SOME_CONDITION &&
   <Text
@@ -108,7 +110,7 @@ const arrayData = [
         c('Text').primary,
       )
     }
-   cms={data['idgr8zk101n']} id="idgr8zk101n" />
+/>
 }
 
 <Text
@@ -119,10 +121,24 @@ const arrayData = [
     someData.content[2],
    )
  }
- cms={data['idkyuegj15h']} id="idkyuegj15h" />
+/>
 
 <Text
  t={
    `<p>This is a paragraph with <span style="color: red">colors</span></p>`
  }
- cms={data['idk6edomlbo']} id="idk6edomlbo" />
+/>
+
+
+{arrayData.map(item => (
+  <Text
+    t={
+      `<p>${item.content}</p>`
+    }
+    uid={item.id}
+  />
+))}
+
+<SomeComponent text_cms="This is Text from a Component" />
+
+

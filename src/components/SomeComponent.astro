@@ -1,0 +1,11 @@
+---
+import Text from "./system/Text.astro";
+const { text_cms, text_id } = Astro.props
+---
+<div class="p-4 border border-red-400">
+  <Text
+    t={text_cms}
+    id={text_id} 
+  />
+</div>
+

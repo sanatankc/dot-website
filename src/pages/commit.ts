@@ -3,7 +3,7 @@ const commit = async (id, value) => {
   const cmsContentJson = JSON.parse(cmsContent)
   cmsContentJson[id] = value
   localStorage.setItem('cmsContent', JSON.stringify(cmsContentJson))
-  const res = await fetch('/saveData?id=' + id + '&value=' + value)
+  const res = await fetch('/api/saveData?id=' + id + '&value=' + value)
   const json = await res.json()
   return json
 }
