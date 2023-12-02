@@ -36,7 +36,7 @@ const processFileContent = (filePath: string) => {
     let cmsContent = JSON.parse(fs.readFileSync(cmsDataFilePath, 'utf8') || '{}');
 
     const textComponentRegex = /<Text\s+(?:[^>]*?\s+)?t=({[^}]*}|"[^"]*"|'[^']*')(?:\s+[^>]*?)?\s*(\/>|>)(?![^<]*<\/Text>)/g;
-    const componentCmsRegex = /<(\w+)\s+([^>]*?_cms="[^"]*")[^>]*>/g;
+    const componentCmsRegex = /<(\w+)\s+([^>]*?)_cms=({["']|["']|{)(.*?)(["']}|["']|})[^>]*>/gs;
     let match;
 
     let usesCMS = false;
@@ -44,9 +44,12 @@ const processFileContent = (filePath: string) => {
     // Processing Text Components
     while ((match = textComponentRegex.exec(content)) !== null) {
         const fullMatch = match[0];
-        if (fullMatch.includes('id="') || fullMatch.includes('id={') || fullMatch.includes('id=\'')) {
+        const idAttributeRegex = /\sid\s*=/; // Regex to match 'id' attribute
+        // Use regex to check if the <Text> component already has an 'id' attribute
+        if (idAttributeRegex.test(fullMatch)) {
             continue;
         }
+
         const id = generateUniqueId();
         cmsContent[id] = null;
         let replacement = fullMatch.endsWith('/>')
@@ -60,12 +63,24 @@ const processFileContent = (filePath: string) => {
     let componentMatch;
     while ((componentMatch = componentCmsRegex.exec(content)) !== null) {
         const componentName = componentMatch[1];
-        const cmsProp = componentMatch[2];
+        const propWithoutCms = componentMatch[2].trim();
+        const propValue = componentMatch[4];
 
         const id = generateUniqueId();
         cmsContent[id] = null;
 
-        let replacement = `<${componentName} ${cmsProp} ${cmsProp}_data={data['${id}']} ${cmsProp}_id="${id}" />`;
+        // Check if the component is self-closing or not
+        const isSelfClosing = componentMatch[0].trim().endsWith('/>');
+
+        let replacement;
+        if (isSelfClosing) {
+            // For self-closing components
+            replacement = `<${componentName} ${propWithoutCms}_cms="${propValue}" ${propWithoutCms}_id="${id}" />`;
+        } else {
+            // For components with children or content
+            replacement = `<${componentName} ${propWithoutCms}_cms="${propValue}" ${propWithoutCms}_id="${id}">`;
+        }
+
         content = content.replace(componentMatch[0], replacement);
         usesCMS = true;
     }
