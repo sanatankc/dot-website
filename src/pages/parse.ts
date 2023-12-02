@@ -87,7 +87,7 @@ const processFileContent = (filePath: string) => {
 
     if (usesCMS) {
         fs.writeFileSync(filePath, content);
-        fs.writeFileSync(cmsDataFilePath, JSON.stringify(cmsContent, null, 2));
+        // fs.writeFileSync(cmsDataFilePath, JSON.stringify(cmsContent, null, 2));
     }
 };
 
