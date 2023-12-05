@@ -68,7 +68,7 @@ const arrayData = [
   - Assign it a unique id and bind the text to the store.
   - We can just add the cms to the component and assign this the :
 
-  <ComponentA text_cms="This that" />
+  <ComponentA text_cms="This that" text_id="idmlb4ov5uw" />
 
   And inside ComponentA it will be.
 
@@ -80,7 +80,7 @@ const arrayData = [
     <Text content={text_cms} />
   </div>
   
-  <ComponentA text_cms={"This that"} text_cms_data={config['123']} text_cms_id="123" />
+  <ComponentA text_cms="This that" text_id="id5vzqk7ppq" />
   And inside ComponentA it will be.
 
   ---
@@ -110,7 +110,7 @@ const arrayData = [
         c('Text').primary,
       )
     }
-/>
+ id="id4ui1ulcbf" />
 }
 
 <Text
@@ -121,13 +121,13 @@ const arrayData = [
     someData.content[2],
    )
  }
-/>
+ id="idblzpn93is" />
 
 <Text
  t={
    `<p>This is a paragraph with <span style="color: red">colors</span></p>`
  }
-/>
+ id="id9toh84dqc" />
 
 
 {arrayData.map(item => (
@@ -136,12 +136,12 @@ const arrayData = [
       `<p>${item.content}</p>`
     }
     uid={item.id}
-  />
+   id="idmrio20xao" />
 ))}
 
-<SomeComponent text_cms="This is Text from a Component" />
+<SomeComponent title_cms="This is Text from a Component" title_id="idr0y0iz30b" />
 
-<SomeComponent text_cms="This is Text from a Component" class="This">
+<SomeComponent text_cms="This is Text from a Component" text_id="idvplnbfke1">
   <h1>Test</h1>
 </SomeComponent>
 

@@ -12,7 +12,6 @@ import {
 
 export default function TextStyleDropdown({ toolbar }) {
   const activeOption = Object.keys(toolbar).find(item => toolbar[item].active)
-  console.log('toolbar...', toolbar, activeOption, toolbar[activeOption]?.active)
   return (
     <select
       onChange={e => {

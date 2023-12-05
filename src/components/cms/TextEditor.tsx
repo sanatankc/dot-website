@@ -10,7 +10,7 @@ import { Node } from '@tiptap/core'
 import Document from '@tiptap/extension-document'
 import BaseParagraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
-import TextStyle from '@tiptap/extension-text-style'
+import BaseTextStyle from '@tiptap/extension-text-style'
 import Underline from  '@tiptap/extension-underline'
 import { Color } from '@tiptap/extension-color'
 import { Toggle } from "@/components/ui/toggle"
@@ -29,10 +29,6 @@ import {
 import TextStyleDropdown from './TextStyleDropdown'
 import { useEffect, useState } from 'react'
 
-const Span = Node.create({
-  
-})
-
 type Levels = 1 | 2 | 3
 
 const classes: Record<Levels, string> = {
@@ -40,6 +36,8 @@ const classes: Record<Levels, string> = {
   2: 'text-3xl font-bold',
   3: 'text-2xl font-bold',
 }
+
+
 
 export const Heading = BaseHeading.configure({ levels: [1, 2, 3] }).extend({
   renderHTML({ node, HTMLAttributes }) {
@@ -57,16 +55,34 @@ export const Heading = BaseHeading.configure({ levels: [1, 2, 3] }).extend({
 })
 
 export const Paragraph = BaseParagraph.extend({
-  renderHTML({ node, HTMLAttributes }) {
-    return [
-      `p`,
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-        class: `text-xl`,
-      }),
-      0,
-    ]
+  addAttributes() {
+    return {
+      class: {
+        parseHTML: element => {
+          return element.getAttribute('class')
+        }
+      }
+    }
   },
 })
+
+export const TextStyle = BaseTextStyle.extend({
+  addAttributes() {
+    return {
+      class: {
+        parseHTML: element => {
+          return element.getAttribute('class')
+        }
+      },
+      style: {
+        parseHTML: element => {
+          return element.getAttribute('style')
+        }
+      }
+    }
+  },
+})
+
 
 // // define your extension array
 // const extensions = [
@@ -95,7 +111,7 @@ const TextEditor = ({id, content }) => {
   })
 
   const editor = useEditor({
-    extensions: [StarterKit.configure({ heading: false }), TextStyle, Color, Heading, Underline],
+    extensions: [StarterKit.configure({ heading: false, paragraph: false }), TextStyle, Heading, Paragraph, Underline],
     content: cms,
     onUpdate: ({ editor }) => {
       if (id) {
@@ -148,6 +164,14 @@ const TextEditor = ({id, content }) => {
     }
   })
 
+  console.log(
+    "paragraph --> ",
+    editor?.getAttributes("textStyle")
+  )
+  // console.log('big paragraph', editor?.isActive('paragraph', {class: 'text-2xl'}))
+  // console.log('big paragraph yellow', editor?.isActive('paragraph', editor?.getAttributes("paragraph").class.includes('text-yellow-300')))
+  // console.log('big paragraph', editor?.isActive('paragraph', {class: 'text-2xl'}))
+  // console.log('span black -> ', editor?.isActive('textStyle', { class: 'bg-black' }))
   
 
   return (

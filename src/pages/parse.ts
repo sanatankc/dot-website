@@ -35,7 +35,7 @@ const processFileContent = (filePath: string) => {
     const cmsDataFilePath = path.join(rootDir, 'src/cms/data.json');
     let cmsContent = JSON.parse(fs.readFileSync(cmsDataFilePath, 'utf8') || '{}');
 
-    const textComponentRegex = /<Text\s+(?:[^>]*?\s+)?t=({[^}]*}|"[^"]*"|'[^']*')(?:\s+[^>]*?)?\s*(\/>|>)(?![^<]*<\/Text>)/g;
+    const textComponentRegex = /<Text\s+([^>]*?\s+)?t=\s*{[\s\S]*?}(?:\s+[^>]*?)?\s*(\/>|>)/g;
     const componentCmsRegex = /<(\w+)\s+([^>]*?)_cms=({["']|["']|{)(.*?)(["']}|["']|})[^>]*>/gs;
     let match;
 
@@ -47,14 +47,22 @@ const processFileContent = (filePath: string) => {
         const idAttributeRegex = /\sid\s*=/; // Regex to match 'id' attribute
         // Use regex to check if the <Text> component already has an 'id' attribute
         if (idAttributeRegex.test(fullMatch)) {
+            console.log('skipping because of id', fullMatch)
             continue;
         }
 
         const id = generateUniqueId();
         cmsContent[id] = null;
-        let replacement = fullMatch.endsWith('/>')
-            ? fullMatch.replace('/>', ` id="${id}" />`)
-            : fullMatch.replace(/>/, ` id="${id}">`);
+
+        let replacement;
+        if (fullMatch.trim().endsWith('/>')) {
+            // For self-closing components
+            replacement = fullMatch.replace('/>', ` id="${id}" />`);
+        } else {
+            // For components with children or content
+            replacement = fullMatch.replace(/<Text\s+/, `<Text id="${id}" `);
+        }
+
         content = content.substring(0, match.index) + replacement + content.substring(match.index + fullMatch.length);
         usesCMS = true;
     }
