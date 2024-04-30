@@ -37,8 +37,6 @@ const classes: Record<Levels, string> = {
   3: 'text-2xl font-bold',
 }
 
-
-
 export const Heading = BaseHeading.configure({ levels: [1, 2, 3] }).extend({
   renderHTML({ node, HTMLAttributes }) {
     const hasLevel = this.options.levels.includes(node.attrs.level)
@@ -95,9 +93,7 @@ export const TextStyle = BaseTextStyle.extend({
 // ]
 
 
-const TextEditor = ({id, content }) => { 
-
-
+const TextEditor = ({id, content }) => {
   const [cms, setCMS] = useState(() => {
     const cmsContent = window.localStorage.getItem('cmsContent');
     let value
@@ -111,7 +107,16 @@ const TextEditor = ({id, content }) => {
   })
 
   const editor = useEditor({
-    extensions: [StarterKit.configure({ heading: false, paragraph: false }), TextStyle, Heading, Paragraph, Underline],
+    extensions: [
+      StarterKit.configure({
+        heading: false,
+        paragraph: false,
+      }),
+      TextStyle,
+      Heading,
+      Paragraph,
+      Underline
+    ],
     content: cms,
     onUpdate: ({ editor }) => {
       if (id) {
@@ -121,6 +126,7 @@ const TextEditor = ({id, content }) => {
       }
     }
   }) 
+  editor.chain().updateAttributes
   const toolbar = {
     "h1": {
       active: editor?.isActive('heading', { level: 1 }),
@@ -139,7 +145,9 @@ const TextEditor = ({id, content }) => {
     },
     "p": {
       active: editor?.isActive('paragraph'),
-      run: () => editor?.chain().focus().setParagraph().run(),
+      run: () => {
+        editor?.chain().focus().setParagraph().run()
+      },
       fontStyle: true
     },
     "bold": {
@@ -164,10 +172,7 @@ const TextEditor = ({id, content }) => {
     }
   })
 
-  console.log(
-    "paragraph --> ",
-    editor?.getAttributes("textStyle")
-  )
+  
   // console.log('big paragraph', editor?.isActive('paragraph', {class: 'text-2xl'}))
   // console.log('big paragraph yellow', editor?.isActive('paragraph', editor?.getAttributes("paragraph").class.includes('text-yellow-300')))
   // console.log('big paragraph', editor?.isActive('paragraph', {class: 'text-2xl'}))
